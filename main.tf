@@ -10,13 +10,13 @@ locals {
     }, rule)
   ]
 
-  default_authorization_rule = {
-    name                        = "RootManageSharedAccessKey"
-    primary_connection_string   = azurerm_servicebus_namespace.main.default_primary_connection_string
-    secondary_connection_string = azurerm_servicebus_namespace.main.default_secondary_connection_string
-    primary_key                 = azurerm_servicebus_namespace.main.default_primary_key
-    secondary_key               = azurerm_servicebus_namespace.main.default_secondary_key
-  }
+  #  default_authorization_rule = {
+  #    name                        = "RootManageSharedAccessKey"
+  #    primary_connection_string   = azurerm_servicebus_namespace.main.default_primary_connection_string
+  #    secondary_connection_string = azurerm_servicebus_namespace.main.default_secondary_connection_string
+  #    primary_key                 = azurerm_servicebus_namespace.main.default_primary_key
+  #    secondary_key               = azurerm_servicebus_namespace.main.default_secondary_key
+  #  }
 
   topics = [
     for topic in var.topics : merge({
@@ -114,7 +114,7 @@ locals {
 }
 
 module "labels" {
-  source      = "git::git@github.com:slovink/terraform-azure-labels.git"
+  source      = "git::git@github.com:slovink/terraform-azure-labels.git?ref=1.0.0"
   name        = var.name
   environment = var.environment
   managedby   = var.managedby
@@ -165,7 +165,7 @@ resource "azurerm_servicebus_topic_authorization_rule" "main" {
   count = length(local.topic_authorization_rules)
 
   name     = local.topic_authorization_rules[count.index].name
-  topic_id = azurerm_servicebus_topic.main.*.id[count.index]
+  topic_id = azurerm_servicebus_topic.main[*].id[count.index]
 
   listen = contains(local.topic_authorization_rules[count.index].rights, "listen") ? true : false
   send   = contains(local.topic_authorization_rules[count.index].rights, "send") ? true : false
@@ -178,7 +178,7 @@ resource "azurerm_servicebus_subscription" "main" {
   count = length(local.topic_subscriptions)
 
   name     = local.topic_subscriptions[count.index].name
-  topic_id = azurerm_servicebus_topic.main.*.id[count.index]
+  topic_id = azurerm_servicebus_topic.main[*].id[count.index]
 
   max_delivery_count        = local.topic_subscriptions[count.index].max_delivery_count
   auto_delete_on_idle       = local.topic_subscriptions[count.index].auto_delete_on_idle
@@ -198,7 +198,7 @@ resource "azurerm_servicebus_subscription_rule" "main" {
 
   name = local.topic_subscription_rules[count.index].name
 
-  subscription_id = azurerm_servicebus_subscription.main.*.id[count.index]
+  subscription_id = azurerm_servicebus_subscription.main[*].id[count.index]
   filter_type     = local.topic_subscription_rules[count.index].sql_filter != "" ? "SqlFilter" : null
   sql_filter      = local.topic_subscription_rules[count.index].sql_filter
   action          = local.topic_subscription_rules[count.index].action
@@ -230,7 +230,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "main" {
   count = length(local.queue_authorization_rules)
 
   name     = local.queue_authorization_rules[count.index].name
-  queue_id = azurerm_servicebus_queue.main.*.id[count.index]
+  queue_id = azurerm_servicebus_queue.main[*].id[count.index]
 
   listen = contains(local.queue_authorization_rules[count.index].rights, "listen") ? true : false
   send   = contains(local.queue_authorization_rules[count.index].rights, "send") ? true : false
