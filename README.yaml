@@ -1,0 +1,50 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name : Terraform AZURE SERVICEBUS
+
+# License of this project
+license: "MIT"
+
+# Canonical GitHub repo
+github_repo: git@github.com:slovink/terraform-azure-servicebus.git
+
+# Badges to display
+badges:
+  - name: "Terraform"
+    image: "https://img.shields.io/badge/Terraform-v1.7.4-green"
+    url: "https://www.terraform.io"
+  - name: "Licence"
+    image: "https://img.shields.io/badge/License-MIT-blue.svg"
+    url: "https://github.com/slovink/terraform-azure-servicebus/blob/master/LICENSE"
+
+#  description of this project
+description: |-
+  Terraform module to create Azure servicebus service resource on AZURE.
+# extra content
+include:
+  - "terraform.md"
+
+# How to use this project
+# How to use this project
+usage: |-
+  Here are some examples of how you can use this module in your inventory structure:
+  ### azure servicebus
+  ```hcl
+
+    # Basic
+   module "service_bus" {
+   source = "./../.."
+
+   name        = "example-huro"
+   environment = "test"
+
+   resource_group_name = module.resource_group.resource_group_name
+   location            = module.resource_group.resource_group_location
+   sku                 = "Basic"
+  }
+  ```
