@@ -4,7 +4,7 @@ provider "azurerm" {
 
 
 module "resource_group" {
-  source  = "git::git@github.com:slovink/terraform-azure-resource-group.git"
+  source = "git::git@github.com:slovink/terraform-azure-resource-group.git?ref=1.0.0"
 
   label_order = ["name", "environment"]
   name        = "rg"
